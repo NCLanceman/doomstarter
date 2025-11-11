@@ -25,14 +25,17 @@ if (os.path.isdir('misc') == False):
 sourceport_dict = {
     "UZDoom": {
         "runcommand": "uzdoom-alpha"
+    },
+    "Woof": {
+        "runcommand": "~/Games/Woof/woof/build/src/woof"
     }
 }
 
 print("The command for running UZDoom is: " +
       sourceport_dict["UZDoom"]["runcommand"])
 print("Running UZDoom with no arguements...")
-subprocess.run(sourceport_dict["UZDoom"]["runcommand"])
-
+subprocess.run(sourceport_dict["UZDoom"]["runcommand"], shell=True)
+# subprocess.run(sourceport_dict["Woof"]["runcommand"], shell=True)
 
 # List all that stuff in a file
 

@@ -3,6 +3,12 @@ import subprocess
 
 path = os.getcwd()
 
+gameplaySettings = []
+mapsSettings = []
+miscSettings = []
+sourceSettings = []
+previousSettings = []
+
 
 def menuPrinter(list):
     for i in range(len(list)):
@@ -26,8 +32,40 @@ if (os.path.isdir('misc') == False):
     os.mkdir('misc')
 
 # Load Config File
-settings = (open("Settings.txt")).read()
-print(settings.splitlines())
+settings = ((open("Settings.txt")).read()).splitlines()
+
+for i in range(len(settings)):
+    currentSettingGroup = []
+
+    if (i == "[Source Ports]"):
+        currentSettingGroup = sourceSettings
+    elif (i == "[Maps]"):
+        sourceSettings = currentSettingGroup
+        currentSettingGroup = mapsSettings
+    elif (i == "[Gameplay]"):
+        mapsSettings = currentSettingGroup
+        currentSettingGroup = gameplaySettings
+    elif (i == "[Misc]"):
+        gameplaySettings = currentSettingGroup
+        currentSettingGroup = miscSettings
+    elif (i == "[Last Used]"):
+        miscSettings = currentSettingGroup
+        currentSettingGroup = previousSettings
+    else:
+        currentSettingGroup.append(i)
+
+previousSettings = currentSettingGroup
+
+print("Printing Source Settings...")
+print(sourceSettings)
+print("Printing Maps...")
+print(mapsSettings)
+print("Printing Gameplay WADs...")
+print(gameplaySettings)
+print("Printing Misc WADs...")
+print(miscSettings)
+print("Printing Previous Settings...")
+print(previousSettings)
 # TODO: Throw everything into a dictionary and utilize at runtime
 
 

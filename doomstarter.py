@@ -15,6 +15,24 @@ def menuPrinter(list):
         print(str(i) + ": " + list[i])
 
 
+def mapSettingsRead():
+    tempDict = {}
+    for i in range(len(mapsSettings)):
+        tempName = "map" + str(i)
+        print("Examining " + mapsSettings[i])
+
+        if (mapsSettings[i][:2] != "--"):
+            if len(tempDict) != 0:
+                settingsDict["maps"].update({tempName: tempDict})
+            tempDict["filename"] = mapsSettings[i]
+        else:
+            temp = mapsSettings[i][2:].split("=")
+            tempDict.update({temp[0]: temp[1]})
+
+    if len(tempDict) != 0:
+        settingsDict["maps"].update({tempName: tempDict})
+
+
 # Dynamic Introduction!
 print("So it looks like you wanna play some fuckin\' DOOM!")
 
@@ -77,8 +95,6 @@ print("Printing Misc WADs...")
 print(miscSettings)
 print("Printing Previous Settings...")
 print(previousSettings)
-# TODO: Throw everything into a dictionary and utilize at runtime
-
 
 # Detect SourcePorts
 # Source Port list: GZDoom, UZDoom, ChocolateDoom, DSDA-Doom, Woof!
@@ -98,29 +114,19 @@ settingsDict = {
 # List all that stuff in a file
 print("Listing everything in Maps...")
 print(os.listdir("./maps/"))
+# TODO: Add maps to main dict
 
+# Read information from the settings file
 print("Adding maps to the main dict...")
-mapName = ""
-tempDict = {}
-for i in range(len(mapsSettings)):
-    tempName = "map" + str(i)
-    print("Examining " + mapsSettings[i])
-
-    if (mapsSettings[i][:2] != "--"):
-        if len(tempDict) != 0:
-            settingsDict["maps"].update({tempName: tempDict})
-        tempDict["filename"] = mapsSettings[i]
-    else:
-        temp = mapsSettings[i][2:].split("=")
-        tempDict.update({temp[0]: temp[1]})
-if len(tempDict) != 0:
-    settingsDict["maps"].update({tempName: tempDict})
+mapSettingsRead()
 
 print("Listing everything in Gameplay...")
 print(os.listdir("./gameplay/"))
+# TODO: Add gameplay WADS to main dict
 
 print("Listing everything in Misc...")
 print(os.listdir("./misc/"))
+# TODO: Add misc wads to the main dict
 
 print(settingsDict)
 

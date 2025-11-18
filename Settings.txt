@@ -1,16 +1,18 @@
 [Source Ports]
 Woof!
---"runcommand"="~/Games/Woof/woof/build/src/woof"
+--description=Dog-themed successor to MBF and DSDA-Doom!
+--runcommand=~/Games/Woof/woof/build/src/woof
 UZDoom
---"runcommand"="uzdoom-alpha"
-DSDA-Doom
-Chocolate Doom
-
+--description=The ever capable modern sourceport!
+--runcommand=uzdoom-alpha
 [Maps]
-
+300minvr.wad
+--name=300 Minutes of /vr/
+--description=4chan's /vr/ board gives us a megawad of solid bangers!
 [Gameplay]
-
+PVT_STONE_V12_5.wad
+--name=Pvt.Stone
+--description=Play as anglo muscle mommy Pvt. Stone as you rip and tear through DOOM!
 [Misc]
-
 [Last Used]
 

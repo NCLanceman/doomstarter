@@ -34,27 +34,38 @@ if (os.path.isdir('misc') == False):
 # Load Config File
 settings = ((open("Settings.txt")).read()).splitlines()
 
-for i in range(len(settings)):
-    currentSettingGroup = []
+currentSetting = ""
+
+for i in settings:
+    print("Examining " + i)
+    print("Current Setting is: " + currentSetting)
 
     if (i == "[Source Ports]"):
-        currentSettingGroup = sourceSettings
+        currentSetting = "Source Ports"
     elif (i == "[Maps]"):
-        sourceSettings = currentSettingGroup
-        currentSettingGroup = mapsSettings
+        currentSetting = "Maps"
     elif (i == "[Gameplay]"):
-        mapsSettings = currentSettingGroup
-        currentSettingGroup = gameplaySettings
+        currentSetting = "Gameplay"
     elif (i == "[Misc]"):
-        gameplaySettings = currentSettingGroup
-        currentSettingGroup = miscSettings
+        currentSetting = "Misc"
     elif (i == "[Last Used]"):
-        miscSettings = currentSettingGroup
-        currentSettingGroup = previousSettings
-    else:
-        currentSettingGroup.append(i)
-
-previousSettings = currentSettingGroup
+        currentSetting = "Previous"
+    if i:
+        if (currentSetting == "Source Ports" and i[0] != '['):
+            sourceSettings.append(i)
+            print("Adding " + i + " to Source Ports")
+        elif (currentSetting == "Maps" and i[0] != '['):
+            mapsSettings.append(i)
+            print("Adding " + i + " to Maps")
+        elif (currentSetting == "Gameplay" and i[0] != '['):
+            gameplaySettings.append(i)
+            print("Adding " + i + " to Gameplay")
+        elif (currentSetting == "Misc" and i[0] != '['):
+            miscSettings.append(i)
+            print("Adding " + i + " to Misc")
+        elif (currentSetting == "Previous" and i[0] != '['):
+            previousSettings.append(i)
+            print("Adding " + i + " to Previous Settings")
 
 print("Printing Source Settings...")
 print(sourceSettings)
@@ -71,17 +82,14 @@ print(previousSettings)
 
 # Detect SourcePorts
 # Source Port list: GZDoom, UZDoom, ChocolateDoom, DSDA-Doom, Woof!
-sourceport_dict = {
-    "UZDoom": {
-        "runcommand": "uzdoom-alpha"
-    },
-    "Woof": {
-        "runcommand": "~/Games/Woof/woof/build/src/woof"
-    }
+settingsDict = {
+    "sourcePorts": {},
+    "maps": {},
+    "gameplay": {},
+    "misc": {},
+    "previous": {}
 }
 
-print("The command for running UZDoom is: " +
-      sourceport_dict["UZDoom"]["runcommand"])
 # print("Running UZDoom with no arguements...")
 # subprocess.run(sourceport_dict["UZDoom"]["runcommand"]
 # + " ./gameplay/PVT_STONE_V12_5.wad", shell = True)
@@ -91,15 +99,33 @@ print("The command for running UZDoom is: " +
 print("Listing everything in Maps...")
 print(os.listdir("./maps/"))
 
+print("Adding maps to the main dict...")
+mapName = ""
+tempDict = {}
+for i in range(len(mapsSettings)):
+    tempName = "map" + str(i)
+    print("Examining " + mapsSettings[i])
+
+    if (mapsSettings[i][:2] != "--"):
+        if len(tempDict) != 0:
+            settingsDict["maps"].update({tempName: tempDict})
+        tempDict["filename"] = mapsSettings[i]
+    else:
+        temp = mapsSettings[i][2:].split("=")
+        tempDict.update({temp[0]: temp[1]})
+if len(tempDict) != 0:
+    settingsDict["maps"].update({tempName: tempDict})
+
 print("Listing everything in Gameplay...")
 print(os.listdir("./gameplay/"))
 
 print("Listing everything in Misc...")
 print(os.listdir("./misc/"))
 
+print(settingsDict)
 
-print("Sample Maps listing: ")
-menuPrinter(os.listdir("./maps/"))
+# print("Sample Maps listing: ")
+# menuPrinter(os.listdir("./maps/"))
 
 # Store last configs for later use
 

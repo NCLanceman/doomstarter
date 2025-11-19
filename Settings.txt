@@ -9,6 +9,12 @@ UZDoom
 300minvr.wad
 --name=300 Minutes of /vr/
 --description=4chan's /vr/ board gives us a megawad of solid bangers!
+valve.wad
+--name=Valiant: Vaccinated Edition
+--description=Valiant! Without the custom enemies or weapons!
+sigil.wad
+--name=SIGIL
+--description=The Icon of Sin Himself, John Romero returns! Episode 5 of DOOM!
 [Gameplay]
 PVT_STONE_V12_5.wad
 --name=Pvt.Stone

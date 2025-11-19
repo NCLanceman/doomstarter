@@ -21,4 +21,8 @@ PVT_STONE_V12_5.wad
 --description=Play as anglo muscle mommy Pvt. Stone as you rip and tear through DOOM!
 [Misc]
 [Last Used]
-
+uzdoom-alpha ./gameplay/PVT_STONE_V12_5.wad
+--SourcePort=UZDoom
+--Gameplay=Pvt. Stone
+--Maps=None
+--Misc=None

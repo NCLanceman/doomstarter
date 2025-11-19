@@ -86,6 +86,29 @@ def gameplaySettingsRead(mainDict, game):
     return mainDict
 
 
+def previousSettingsRead(mainDict, prev):
+    tempDict = {}
+    counter = 0
+    for i in range(len(prev)):
+        tempName = "previous" + str(counter).zfill(2)
+        print("Examining " + prev[i])
+
+        if (prev[i][:2] != "--"):
+            if len(tempDict) != 0:
+                mainDict["previous"].update({tempName: tempDict})
+                tempDict = {}
+                counter = counter + 1
+            tempDict["command"] = prev[i]
+        else:
+            temp = prev[i][2:].split("=")
+            tempDict.update({temp[0]: temp[1]})
+
+    if len(tempDict) != 0:
+        mainDict["previous"].update({tempName: tempDict})
+
+    return mainDict
+
+
 # Dynamic Introduction!
 print("So it looks like you wanna play some fuckin\' DOOM!")
 print("Checking current directories...")
@@ -182,6 +205,10 @@ else:
     print("Listing everything in Misc...")
     print(os.listdir("./misc/"))
     # TODO: Add misc wads to the main dict
+
+    print("Listing everything in Previous...")
+    print(previousSettings)
+    settingsDict = previousSettingsRead(settingsDict, previousSettings)
 
     print(settingsDict)
 

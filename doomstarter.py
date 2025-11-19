@@ -15,21 +15,46 @@ def menuPrinter(list):
         print(str(i) + ": " + list[i])
 
 
-def mapSettingsRead(mainDict):
+# TODO: Make a single function that reads settings
+def sourcePortSettingsRead(mainDict, ports):
     tempDict = {}
     counter = 0
-    for i in range(len(mapsSettings)):
-        tempName = "map" + str(counter).zfill(2)
-        print("Examining " + mapsSettings[i])
+    for i in range(len(ports)):
+        tempName = "port" + str(counter).zfill(2)
+        print("Examining " + ports[i])
 
-        if (mapsSettings[i][:2] != "--"):
+        if (ports[i][:2] != "--"):
             if len(tempDict) != 0:
-                settingsDict["maps"].update({tempName: tempDict})
+                mainDict["sourcePorts"].update({tempName: tempDict})
                 tempDict = {}
                 counter = counter + 1
-            tempDict["filename"] = mapsSettings[i]
+            tempDict["title"] = ports[i]
+
         else:
-            temp = mapsSettings[i][2:].split("=")
+            temp = ports[i][2:].split("=")
+            tempDict.update({temp[0]: temp[1]})
+
+    if len(tempDict) != 0:
+        mainDict["sourcePorts"].update({tempName: tempDict})
+
+    return mainDict
+
+
+def mapSettingsRead(mainDict, maps):
+    tempDict = {}
+    counter = 0
+    for i in range(len(maps)):
+        tempName = "map" + str(counter).zfill(2)
+        print("Examining " + maps[i])
+
+        if (maps[i][:2] != "--"):
+            if len(tempDict) != 0:
+                mainDict["maps"].update({tempName: tempDict})
+                tempDict = {}
+                counter = counter + 1
+            tempDict["filename"] = maps[i]
+        else:
+            temp = maps[i][2:].split("=")
             tempDict.update({temp[0]: temp[1]})
 
     if len(tempDict) != 0:
@@ -117,13 +142,16 @@ else:
     # subprocess.run(sourceport_dict["Woof"]["runcommand"], shell=True)
 
     # List all that stuff in a file
+    print("Addings Source Ports from Settings file...")
+    settingsDict = sourcePortSettingsRead(settingsDict, sourceSettings)
+
     print("Listing everything in Maps...")
     print(os.listdir("./maps/"))
     # TODO: Add maps to main dict
 
     # Read information from the settings file
     print("Adding maps to the main dict...")
-    settingsDict = mapSettingsRead(settingsDict)
+    settingsDict = mapSettingsRead(settingsDict, mapsSettings)
 
     print("Listing everything in Gameplay...")
     print(os.listdir("./gameplay/"))

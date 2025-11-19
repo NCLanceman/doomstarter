@@ -52,13 +52,36 @@ def mapSettingsRead(mainDict, maps):
                 mainDict["maps"].update({tempName: tempDict})
                 tempDict = {}
                 counter = counter + 1
-            tempDict["filename"] = maps[i]
+            tempDict["filename"] = "./maps/" + maps[i]
         else:
             temp = maps[i][2:].split("=")
             tempDict.update({temp[0]: temp[1]})
 
     if len(tempDict) != 0:
         mainDict["maps"].update({tempName: tempDict})
+
+    return mainDict
+
+
+def gameplaySettingsRead(mainDict, game):
+    tempDict = {}
+    counter = 0
+    for i in range(len(game)):
+        tempName = "gameplay" + str(counter).zfill(2)
+        print("Examining " + game[i])
+
+        if (game[i][:2] != "--"):
+            if len(tempDict) != 0:
+                mainDict["gameplay"].update({tempName: tempDict})
+                tempDict = {}
+                counter = counter + 1
+            tempDict["filename"] = "./gameplay/" + game[i]
+        else:
+            temp = game[i][2:].split("=")
+            tempDict.update({temp[0]: temp[1]})
+
+    if len(tempDict) != 0:
+        mainDict["gameplay"].update({tempName: tempDict})
 
     return mainDict
 
@@ -147,15 +170,14 @@ else:
 
     print("Listing everything in Maps...")
     print(os.listdir("./maps/"))
-    # TODO: Add maps to main dict
 
-    # Read information from the settings file
     print("Adding maps to the main dict...")
     settingsDict = mapSettingsRead(settingsDict, mapsSettings)
 
     print("Listing everything in Gameplay...")
     print(os.listdir("./gameplay/"))
     # TODO: Add gameplay WADS to main dict
+    settingsDict = gameplaySettingsRead(settingsDict, gameplaySettings)
 
     print("Listing everything in Misc...")
     print(os.listdir("./misc/"))

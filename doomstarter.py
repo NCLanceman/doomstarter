@@ -105,6 +105,28 @@ def settingsReader(mainDict, file):
     return mainDict
 
 
+def settingsGen(mapList, gameList, miscList):
+    result = ""
+    # Add a spot for Source Ports
+    result = result + "[Source Ports]\n"
+    # Add the maps
+    result = result + "[Maps]\n"
+    for i in mapList:
+        result = result + str(i) + "\n"
+    # Add the gameplay wads
+    result = result + "[Gameplay]\n"
+    for i in gameList:
+        result = result + str(i) + "\n"
+    # Add misc wads
+    result = result + "[Misc]\n"
+    for i in miscList:
+        result = result + str(i) + "\n"
+    result = result + "[Last Used]"
+
+    return result
+
+
+# INFO: MAIN METHOD!
 # Dynamic Introduction!
 print("So it looks like you wanna play some fuckin\' DOOM!")
 print("Checking current directories...")
@@ -131,26 +153,44 @@ else:
         "previous": {}
     }
 
-    settingsDict = settingsReader(blankDict, "Settings.txt")
+    if (os.path.isfile('settings.txt'):
+        settingsDict=settingsReader(blankDict, "Settings.txt")
+    else:
+        settingsDict=blankDict
+
+        maps=os.listdir("./maps/")
+        game=os.listdir(("./gameplay/")
+        misc=os.listdir("./misc/")
+
+
+        print("Writing to file...")
+        with open("settings.txt", "w") as f:
+            f.write(settingsGen(maps, game, misc))
+
+
     # print("Running UZDoom with no arguements...")
     # subprocess.run(sourceport_dict["UZDoom"]["runcommand"]
     # + " ./gameplay/PVT_STONE_V12_5.wad", shell = True)
     # subprocess.run(sourceport_dict["Woof"]["runcommand"], shell=True)
 
-    print("Listing everything in Maps...")
-    print(os.listdir("./maps/"))
+    # print("Listing everything in Maps...")
+    # print(os.listdir("./maps/"))
 
-    print("Listing everything in Gameplay...")
-    print(os.listdir("./gameplay/"))
+    # print("Listing everything in Gameplay...")
+    # print(os.listdir("./gameplay/"))
 
-    print("Listing everything in Misc...")
-    print(os.listdir("./misc/"))
+    # print("Listing everything in Misc...")
+    # print(os.listdir("./misc/"))
 
     print(settingsDict)
 
     # TODO: Now that I can read a settings file, create one
 
-    # Store last configs for later use
+    # TODO: Throw everything into the settingsDict
+
+    # TODO: Add an option for adding details for given entries.
+
+
 
     # Configure SourcePort
 

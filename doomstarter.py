@@ -3,11 +3,7 @@ import subprocess
 
 path = os.getcwd()
 
-gameplaySettings = []
-mapsSettings = []
-miscSettings = []
-sourceSettings = []
-previousSettings = []
+# FIX: is this actually necessary?
 
 
 def menuPrinter(list):
@@ -15,7 +11,6 @@ def menuPrinter(list):
         print(str(i) + ": " + list[i])
 
 
-# TODO: Make a single function that reads settings
 def settingsReader(mainDict, file):
     tempDict = {}
     currentSetting = ""
@@ -44,6 +39,7 @@ def settingsReader(mainDict, file):
         elif (i == "[Last Used]"):
             currentSetting = "Previous"
             counter = 0
+        # TODO: Compress/cut down this whole block
         if i:
             if (currentSetting == "Source Ports" and i[0] != '['):
                 # sourcePortSettingsRead
@@ -125,9 +121,6 @@ if not (os.path.isdir('gameplay') and os.path.isdir('maps') and os.path.isdir('m
 
     print("Folders Created! Now go forth and fill them! Return when you are ready to DOOM!")
 else:
-    # Load Config File
-    # settings = ((open("Settings.txt")).read()).splitlines()
-
     # Load Config File and return populated settingsDict
 
     blankDict = {
@@ -155,8 +148,7 @@ else:
 
     print(settingsDict)
 
-    # print("Sample Maps listing: ")
-    # menuPrinter(os.listdir("./maps/"))
+    # TODO: Now that I can read a settings file, create one
 
     # Store last configs for later use
 

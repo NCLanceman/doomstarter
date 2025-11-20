@@ -16,95 +16,95 @@ def menuPrinter(list):
 
 
 # TODO: Make a single function that reads settings
-def sourcePortSettingsRead(mainDict, ports):
+def settingsReader(mainDict, file):
     tempDict = {}
+    currentSetting = ""
     counter = 0
-    for i in range(len(ports)):
-        tempName = "port" + str(counter).zfill(2)
-        print("Examining " + ports[i])
+    counterName = str(counter).zfill(2)
+    settings = ((open(file)).read()).splitlines()
 
-        if (ports[i][:2] != "--"):
-            if len(tempDict) != 0:
-                mainDict["sourcePorts"].update({tempName: tempDict})
-                tempDict = {}
-                counter = counter + 1
-            tempDict["title"] = ports[i]
+    for i in settings:
+        print("Examining " + i)
+        print("Current Setting is: " + currentSetting)
+        counterName = str(counter).zfill(2)
 
-        else:
-            temp = ports[i][2:].split("=")
-            tempDict.update({temp[0]: temp[1]})
+        if (i == "[Source Ports]"):
+            currentSetting = "Source Ports"
+            print("Addings Source Ports from Settings file...")
+        elif (i == "[Maps]"):
+            currentSetting = "Maps"
+            counter = 0
+            print("Adding maps to the main dict...")
+        elif (i == "[Gameplay]"):
+            currentSetting = "Gameplay"
+            counter = 0
+        elif (i == "[Misc]"):
+            currentSetting = "Misc"
+            counter = 0
+        elif (i == "[Last Used]"):
+            currentSetting = "Previous"
+            counter = 0
+        if i:
+            if (currentSetting == "Source Ports" and i[0] != '['):
+                # sourcePortSettingsRead
+                if (i[:2] != "--"):
+                    tempDict = {}
+                    tempDict["title"] = i
+                    counter = counter + 1
+                    counterName = str(counter).zfill(2)
+                else:
+                    temp = i[2:].split("=")
+                    tempDict.update({temp[0]: temp[1]})
 
-    if len(tempDict) != 0:
-        mainDict["sourcePorts"].update({tempName: tempDict})
+                mainDict["sourcePorts"].update({counterName: tempDict})
+            elif (currentSetting == "Maps" and i[0] != '['):
+                # mapSettingsRead
+                if (i[:2] != "--"):
+                    tempDict = {}
+                    tempDict["filename"] = "./maps/" + i
+                    counter = counter + 1
+                    counterName = str(counter).zfill(2)
+                else:
+                    temp = i[2:].split("=")
+                    tempDict.update({temp[0]: temp[1]})
 
-    return mainDict
+                mainDict["maps"].update({counterName: tempDict})
+            elif (currentSetting == "Gameplay" and i[0] != '['):
+                # gameplaySettingsRead
+                if (i[:2] != "--"):
+                    tempDict = {}
+                    tempDict["filename"] = "./gameplay/" + i
+                    counter = counter + 1
+                    counterName = str(counter).zfill(2)
+                else:
+                    temp = i[2:].split("=")
+                    tempDict.update({temp[0]: temp[1]})
 
+                mainDict["gameplay"].update({counterName: tempDict})
+            elif (currentSetting == "Misc" and i[0] != '['):
+                # miscSettingsRead
+                if (i[:2] != "--"):
+                    tempDict = {}
+                    tempDict["filename"] = "./misc/" + i
+                    counter = counter + 1
+                    counterName = str(counter).zfill(2)
+                else:
+                    temp = i[2:].split("=")
+                    tempDict.update({temp[0]: temp[1]})
 
-def mapSettingsRead(mainDict, maps):
-    tempDict = {}
-    counter = 0
-    for i in range(len(maps)):
-        tempName = "map" + str(counter).zfill(2)
-        print("Examining " + maps[i])
+                mainDict["misc"].update({counterName: tempDict})
+            elif (currentSetting == "Previous" and i[0] != '['):
+                # previousSettingsRead
+                if (i[:2] != "--"):
+                    tempDict = {}
+                    tempDict["command"] = i
+                    counter = counter + 1
+                    counterName = str(counter).zfill(2)
+                else:
+                    temp = i[2:].split("=")
+                    tempDict.update({temp[0]: temp[1]})
 
-        if (maps[i][:2] != "--"):
-            if len(tempDict) != 0:
-                mainDict["maps"].update({tempName: tempDict})
-                tempDict = {}
-                counter = counter + 1
-            tempDict["filename"] = "./maps/" + maps[i]
-        else:
-            temp = maps[i][2:].split("=")
-            tempDict.update({temp[0]: temp[1]})
-
-    if len(tempDict) != 0:
-        mainDict["maps"].update({tempName: tempDict})
-
-    return mainDict
-
-
-def gameplaySettingsRead(mainDict, game):
-    tempDict = {}
-    counter = 0
-    for i in range(len(game)):
-        tempName = "gameplay" + str(counter).zfill(2)
-        print("Examining " + game[i])
-
-        if (game[i][:2] != "--"):
-            if len(tempDict) != 0:
-                mainDict["gameplay"].update({tempName: tempDict})
-                tempDict = {}
-                counter = counter + 1
-            tempDict["filename"] = "./gameplay/" + game[i]
-        else:
-            temp = game[i][2:].split("=")
-            tempDict.update({temp[0]: temp[1]})
-
-    if len(tempDict) != 0:
-        mainDict["gameplay"].update({tempName: tempDict})
-
-    return mainDict
-
-
-def previousSettingsRead(mainDict, prev):
-    tempDict = {}
-    counter = 0
-    for i in range(len(prev)):
-        tempName = "previous" + str(counter).zfill(2)
-        print("Examining " + prev[i])
-
-        if (prev[i][:2] != "--"):
-            if len(tempDict) != 0:
-                mainDict["previous"].update({tempName: tempDict})
-                tempDict = {}
-                counter = counter + 1
-            tempDict["command"] = prev[i]
-        else:
-            temp = prev[i][2:].split("=")
-            tempDict.update({temp[0]: temp[1]})
-
-    if len(tempDict) != 0:
-        mainDict["previous"].update({tempName: tempDict})
+                mainDict["previous"].update({counterName: tempDict})
 
     return mainDict
 
@@ -126,55 +126,11 @@ if not (os.path.isdir('gameplay') and os.path.isdir('maps') and os.path.isdir('m
     print("Folders Created! Now go forth and fill them! Return when you are ready to DOOM!")
 else:
     # Load Config File
-    settings = ((open("Settings.txt")).read()).splitlines()
+    # settings = ((open("Settings.txt")).read()).splitlines()
 
-    currentSetting = ""
+    # Load Config File and return populated settingsDict
 
-    for i in settings:
-        print("Examining " + i)
-        print("Current Setting is: " + currentSetting)
-
-        if (i == "[Source Ports]"):
-            currentSetting = "Source Ports"
-        elif (i == "[Maps]"):
-            currentSetting = "Maps"
-        elif (i == "[Gameplay]"):
-            currentSetting = "Gameplay"
-        elif (i == "[Misc]"):
-            currentSetting = "Misc"
-        elif (i == "[Last Used]"):
-            currentSetting = "Previous"
-        if i:
-            if (currentSetting == "Source Ports" and i[0] != '['):
-                sourceSettings.append(i)
-                print("Adding " + i + " to Source Ports")
-            elif (currentSetting == "Maps" and i[0] != '['):
-                mapsSettings.append(i)
-                print("Adding " + i + " to Maps")
-            elif (currentSetting == "Gameplay" and i[0] != '['):
-                gameplaySettings.append(i)
-                print("Adding " + i + " to Gameplay")
-            elif (currentSetting == "Misc" and i[0] != '['):
-                miscSettings.append(i)
-                print("Adding " + i + " to Misc")
-            elif (currentSetting == "Previous" and i[0] != '['):
-                previousSettings.append(i)
-                print("Adding " + i + " to Previous Settings")
-
-    print("Printing Source Settings...")
-    print(sourceSettings)
-    print("Printing Maps...")
-    print(mapsSettings)
-    print("Printing Gameplay WADs...")
-    print(gameplaySettings)
-    print("Printing Misc WADs...")
-    print(miscSettings)
-    print("Printing Previous Settings...")
-    print(previousSettings)
-
-    # Detect SourcePorts
-    # Source Port list: GZDoom, UZDoom, ChocolateDoom, DSDA-Doom, Woof!
-    settingsDict = {
+    blankDict = {
         "sourcePorts": {},
         "maps": {},
         "gameplay": {},
@@ -182,33 +138,20 @@ else:
         "previous": {}
     }
 
+    settingsDict = settingsReader(blankDict, "Settings.txt")
     # print("Running UZDoom with no arguements...")
     # subprocess.run(sourceport_dict["UZDoom"]["runcommand"]
     # + " ./gameplay/PVT_STONE_V12_5.wad", shell = True)
     # subprocess.run(sourceport_dict["Woof"]["runcommand"], shell=True)
 
-    # List all that stuff in a file
-    print("Addings Source Ports from Settings file...")
-    settingsDict = sourcePortSettingsRead(settingsDict, sourceSettings)
-
     print("Listing everything in Maps...")
     print(os.listdir("./maps/"))
 
-    print("Adding maps to the main dict...")
-    settingsDict = mapSettingsRead(settingsDict, mapsSettings)
-
     print("Listing everything in Gameplay...")
     print(os.listdir("./gameplay/"))
-    # TODO: Add gameplay WADS to main dict
-    settingsDict = gameplaySettingsRead(settingsDict, gameplaySettings)
 
     print("Listing everything in Misc...")
     print(os.listdir("./misc/"))
-    # TODO: Add misc wads to the main dict
-
-    print("Listing everything in Previous...")
-    print(previousSettings)
-    settingsDict = previousSettingsRead(settingsDict, previousSettings)
 
     print(settingsDict)
 

@@ -105,6 +105,22 @@ def settingsReader(mainDict, file):
     return mainDict
 
 
+def detailAdder(itemDict, itemType):
+    if (itemType == "sourcePorts"):
+        itemDict["description"] = input("Source Port Description: ")
+    if (itemType == "maps"):
+        itemDict["name"] = input("Map WAD Name: ")
+        itemDict["description"] = input("Map Description: ")
+    if (itemType == "gameplay"):
+        itemDict["name"] = input("Gameplay WAD Name: ")
+        itemDict["description"] = input("Gameplay Description: ")
+    if (itemType == "misc"):
+        itemDict["name"] = input("Misc WAD Name: ")
+        itemDict["description"] = input("WAD Description: ")
+
+    return itemDict
+
+
 def settingsGen(mapList, gameList, miscList):
     result = ""
     # Add a spot for Source Ports
@@ -153,20 +169,42 @@ else:
         "previous": {}
     }
 
-    if (os.path.isfile('settings.txt'):
-        settingsDict=settingsReader(blankDict, "Settings.txt")
+    if (os.path.isfile('settings.txt')):
+        settingsDict = settingsReader(blankDict, "settings.txt")
     else:
-        settingsDict=blankDict
-
-        maps=os.listdir("./maps/")
-        game=os.listdir(("./gameplay/")
-        misc=os.listdir("./misc/")
-
+        maps = os.listdir("./maps/")
+        game = os.listdir("./gameplay/")
+        misc = os.listdir("./misc/")
 
         print("Writing to file...")
         with open("settings.txt", "w") as f:
             f.write(settingsGen(maps, game, misc))
+            f.close()
 
+        # This is so fucking jank
+        settingsDict = settingsReader(blankDict, "settings.txt")
+
+        # Insert a Source Port
+        print("Add a Source Port.")
+        portName = input("Source Port Name: ")
+        portCommand = input("Launch Command: ")
+
+        print("Port Name: " + portName + "\nPort Command: " + portCommand)
+        newPort = {
+            "title": portName,
+            "runcommand": portCommand
+        }
+        settingsDict["sourcePorts"].update({"01": newPort})
+
+        print("Testing out trying to add detail to all maps...")
+        for i in range(len(settingsDict["maps"])):
+            mapDict = settingsDict["maps"][str(i+1).zfill(2)]
+            mapName = mapDict["filename"]
+            print("Enter description for " + mapName + ": ")
+            settingsDict["maps"].update(
+                {(str(i+1).zfill(2)): detailAdder(mapDict, "maps")})
+
+        print(settingsDict)
 
     # print("Running UZDoom with no arguements...")
     # subprocess.run(sourceport_dict["UZDoom"]["runcommand"]
@@ -182,15 +220,11 @@ else:
     # print("Listing everything in Misc...")
     # print(os.listdir("./misc/"))
 
-    print(settingsDict)
-
     # TODO: Now that I can read a settings file, create one
 
     # TODO: Throw everything into the settingsDict
 
     # TODO: Add an option for adding details for given entries.
-
-
 
     # Configure SourcePort
 

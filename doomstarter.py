@@ -125,6 +125,8 @@ def detailAdder(itemDict, itemType):
 
     return itemDict
 
+# TODO: Ensure only .wad files get added to lists
+
 
 def settingsGen(mapList, gameList, miscList):
     result = ""

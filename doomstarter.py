@@ -58,6 +58,7 @@ def settingsReader(mainDict, file):
                 if (i[:2] != "--"):
                     tempDict = {}
                     tempDict["filename"] = "./maps/" + i
+                    tempDict["listing"] = i
                     counter = counter + 1
                     counterName = str(counter).zfill(2)
                 else:
@@ -70,6 +71,7 @@ def settingsReader(mainDict, file):
                 if (i[:2] != "--"):
                     tempDict = {}
                     tempDict["filename"] = "./gameplay/" + i
+                    tempDict["listing"] = i
                     counter = counter + 1
                     counterName = str(counter).zfill(2)
                 else:
@@ -82,6 +84,7 @@ def settingsReader(mainDict, file):
                 if (i[:2] != "--"):
                     tempDict = {}
                     tempDict["filename"] = "./misc/" + i
+                    tempDict["listing"] = i
                     counter = counter + 1
                     counterName = str(counter).zfill(2)
                 else:
@@ -103,6 +106,8 @@ def settingsReader(mainDict, file):
                 mainDict["previous"].update({counterName: tempDict})
 
     return mainDict
+
+# TODO: Print output and confirm before returning the itemDict
 
 
 def detailAdder(itemDict, itemType):
@@ -138,6 +143,53 @@ def settingsGen(mapList, gameList, miscList):
     for i in miscList:
         result = result + str(i) + "\n"
     result = result + "[Last Used]"
+
+    return result
+
+
+def settingsSave(mainDict):
+    result = ""
+
+    # Add Source Ports
+    result = result + "[Source Ports]\n"
+    for i in mainDict["sourcePorts"]:
+        result = result + mainDict["sourcePorts"][i]["title"] + "\n"
+        for j in mainDict["sourcePorts"][i].keys():
+            if not (j == "title"):
+                result = result + "--" + j + "=" + \
+                    mainDict["sourcePorts"][i][j] + "\n"
+
+    # Add Maps
+    result = result + "[Maps]\n"
+    for i in mainDict["maps"]:
+        result = result + mainDict["maps"][i]["listing"] + "\n"
+        for j in mainDict["maps"][i].keys():
+            if not (j == "listing"):
+                result = result + "--" + j + "=" + \
+                    mainDict["maps"][i][j] + "\n"
+
+    # Add Gameplay
+    result = result + "[Gameplay]\n"
+    for i in mainDict["gameplay"]:
+        result = result + mainDict["gameplay"][i]["listing"] + "\n"
+        for j in mainDict["gameplay"][i].keys():
+            if not (j == "listing"):
+                result = result + "--" + j + "=" + \
+                    mainDict["gameplay"][i][j] + "\n"
+
+    # Add Misc
+    result = result + "[Misc]\n"
+    for i in mainDict["misc"]:
+        result = result + mainDict["misc"][i]["listing"] + "\n"
+        for j in mainDict["misc"][i].keys():
+            if not (j == "listing"):
+                result = result + "--" + j + "=" + \
+                    mainDict["misc"][i][j] + "\n"
+
+    # Add Last Used
+    result = result + "[Last Used]" + "\n"
+    for i in mainDict["previous"]:
+        result = result + i + "\n"
 
     return result
 
@@ -199,12 +251,16 @@ else:
         print("Testing out trying to add detail to all maps...")
         for i in range(len(settingsDict["maps"])):
             mapDict = settingsDict["maps"][str(i+1).zfill(2)]
-            mapName = mapDict["filename"]
-            print("Enter description for " + mapName + ": ")
+            mapListing = mapDict["listing"]
+            print("Enter description for " + mapListing + ": ")
             settingsDict["maps"].update(
                 {(str(i+1).zfill(2)): detailAdder(mapDict, "maps")})
 
         print(settingsDict)
+        print("\n\n Saving to new file!")
+        with open("dictSettings.txt", "w") as f:
+            f.write(settingsSave(settingsDict))
+            f.close()
 
     # print("Running UZDoom with no arguements...")
     # subprocess.run(sourceport_dict["UZDoom"]["runcommand"]

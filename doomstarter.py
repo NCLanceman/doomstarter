@@ -19,8 +19,8 @@ def settingsReader(mainDict, file):
     settings = ((open(file)).read()).splitlines()
 
     for i in settings:
-        print("Examining " + i)
-        print("Current Setting is: " + currentSetting)
+        # print("Examining " + i)
+        # print("Current Setting is: " + currentSetting)
         counterName = str(counter).zfill(2)
 
         if (i == "[Source Ports]"):
@@ -135,15 +135,18 @@ def settingsGen(mapList, gameList, miscList):
     # Add the maps
     result = result + "[Maps]\n"
     for i in mapList:
-        result = result + str(i) + "\n"
+        if ((i.split('.'))[1].lower() == "wad"):
+            result = result + str(i) + "\n"
     # Add the gameplay wads
     result = result + "[Gameplay]\n"
     for i in gameList:
-        result = result + str(i) + "\n"
+        if ((i.split('.'))[1].lower() == "wad"):
+            result = result + str(i) + "\n"
     # Add misc wads
     result = result + "[Misc]\n"
     for i in miscList:
-        result = result + str(i) + "\n"
+        if ((i.split('.'))[1].lower() == "wad"):
+            result = result + str(i) + "\n"
     result = result + "[Last Used]"
 
     return result
@@ -260,7 +263,7 @@ else:
 
         print(settingsDict)
         print("\n\n Saving to new file!")
-        with open("dictSettings.txt", "w") as f:
+        with open("settings.txt", "w") as f:
             f.write(settingsSave(settingsDict))
             f.close()
 
@@ -268,21 +271,6 @@ else:
     # subprocess.run(sourceport_dict["UZDoom"]["runcommand"]
     # + " ./gameplay/PVT_STONE_V12_5.wad", shell = True)
     # subprocess.run(sourceport_dict["Woof"]["runcommand"], shell=True)
-
-    # print("Listing everything in Maps...")
-    # print(os.listdir("./maps/"))
-
-    # print("Listing everything in Gameplay...")
-    # print(os.listdir("./gameplay/"))
-
-    # print("Listing everything in Misc...")
-    # print(os.listdir("./misc/"))
-
-    # TODO: Now that I can read a settings file, create one
-
-    # TODO: Throw everything into the settingsDict
-
-    # TODO: Add an option for adding details for given entries.
 
     # Configure SourcePort
 

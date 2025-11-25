@@ -3,8 +3,6 @@ import subprocess
 
 path = os.getcwd()
 
-# FIX: is this actually necessary?
-
 
 def menuPrinter(list):
     for i in range(len(list)):
